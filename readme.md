@@ -32,7 +32,7 @@ $\ell = (n+1)\log q$.
 
 - **Key Gen** $(1^n) \rightarrow s \in \mathbb{Z}_q^{n+1}$
 
-  - Sample a random vector $s' \xleftarrow{R} \mathbb{Z}_q^n$.
+  - Sample a random vector $s' \xleftarrow{R}$ $\mathbb{Z}_q^n$.
   - Output:
     $$s = \begin{pmatrix} -s' \\ 1 \end{pmatrix} \in \mathbb{Z}_q^{n+1}$$
 
