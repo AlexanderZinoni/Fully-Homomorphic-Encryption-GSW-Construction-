@@ -1,7 +1,7 @@
 all= main
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -lm
+CFLAGS = -Wall -Wextra -Iinclude
 LDLIBS = -lm
 
 INC = include

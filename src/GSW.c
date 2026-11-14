@@ -54,7 +54,7 @@ uint *enc_bit(size_t n, size_t q, uint *key, char mu){
 	A = append_vec(A, v, n, l);
 
 	if (!mu){
-		printf("not mu\n");
+		//printf("not mu\n");
 		if (!check_correctness(A,key,e,n,l,q))
 			printf("RESULT INCORECT\n");
 		free(v);
@@ -70,4 +70,25 @@ uint *enc_bit(size_t n, size_t q, uint *key, char mu){
 	free(v);
 	free(e);
 	return A;
+}
+
+
+char dec_bit(size_t n, size_t q, uint *C, uint *key){
+	size_t l = (n+1) * ceil_log2(q);
+	key = s_from_key(key, n);
+
+	uint *Cs = mat_vec_prod(C, key, n+1, l, q);
+	//print_vec(Cs,l);
+
+	uint max_magnitude = q>>2; // or q/4
+
+	for (size_t i=0; i<l; i++){
+		//printf("%i > %i AND %i < %li\n",Cs[i],max_magnitude, Cs[i], q-max_magnitude);
+
+		if ( (Cs[i]>max_magnitude) && (Cs[i]<q-max_magnitude) ){
+			return 1;
+		}
+	}
+
+	return 0;
 }
