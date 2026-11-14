@@ -2,31 +2,9 @@
 
 This is a basic and not secure implementation of GSW as described in the lecture notes [[1]](#1).
 
-## Project Structure
-    .
-    ├── include/    # Header files (.h)
-    ├── src/        # Source files (.c)
-    ├── makefile    # for compilation
-    └── README.md
+## Description of the algorithm 
 
-## Compilation and Running
-
-Compile the project using `make`:
-
-    make
-
-and execute it with :
-
-    ./main matrix.txt
-
-To remove the generated executable and object files:
-
-    make clean
-
-## Description of the algorithm as in [[1]](#1)
-
-
-The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$ and
+The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.Here
 $\ell = (n+1)\log q$.
 
 
@@ -63,6 +41,27 @@ $\ell = (n+1)\log q$.
 - [ ] Add Homomorphic oprations (sum and product).
 - [ ] Increase variable size (32bit -> 64bit).
 - [ ] Use something more cryptographically secure than `rand()`.
+
+## Project Structure
+    .
+    ├── include/    # Header files (.h)
+    ├── src/        # Source files (.c)
+    ├── makefile    # for compilation
+    └── README.md
+
+## Compilation and Running
+
+Compile the project using `make`:
+
+    make
+
+and execute it with :
+
+    ./main matrix.txt
+
+To remove the generated executable and object files:
+
+    make clean
 
 
 ## References
