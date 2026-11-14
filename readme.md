@@ -4,7 +4,7 @@ This is a basic and not secure implementation of GSW as described in the lecture
 
 ## Description of the algorithm 
 
-The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.In this case, the message $m$ is a single bit, $n$ is an integer called the security parameter, $q$ is the modulus, and $\chi$ is a probility distribution. We also note  $\ell = (n+1)\log q$.
+The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.In this case, the message $m$ is a single bit $\mu$, $n$ is an integer called the security parameter, $q$ is the modulus, and $\chi$ is a probility distribution. We also note  $\ell = (n+1)\log q$.
 
 
 - **Key Gen** $(1^n) \rightarrow s \in \mathbb{Z}_q^{n+1}$
