@@ -32,16 +32,15 @@ $\ell = (n+1)\log q$.
 
 - **Key Gen** $(1^n) \rightarrow s \in \mathbb{Z}_q^{n+1}$
 
-  - Sample a random vector $s' \xleftarrow{R}$ $\mathbb{Z}_q^n$.
-  - Output:
-    $$s = \begin{pmatrix} -s' \\ 1 \end{pmatrix} \in \mathbb{Z}_q^{n+1}$$
+  - Sample a random vector $s'$ from $\mathbb{Z}_q^n$.
+  - Return the vector $s$ with $n+1$ corrdinates by adding a 1 as last coordinate to $s'$. 
 
 - **Enc** $(s \in \mathbb{Z}_q^{n+1},\ \mu \in \mathbb{Z}_2) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
 
-  - Sample a random matrix $A \xleftarrow{R} \mathbb{Z}_q^{\ell \times n}$.
-  - Sample an error vector $e \xleftarrow{R} \chi^\ell$.
+  - Sample a random matrix $A$ from  $\mathbb{Z}_q^{\ell \times n}$.
+  - Sample an error vector $e$ in $\chi^\ell$, where $\chi$ is the error distribution. In this implementation, I rely on the Central Limit Theorem to implement this.
   - Build:
-    $$B = (A \parallel As' + e) \in \mathbb{Z}_q^{\ell \times (n+1)}$$, where || means that we add $As'+e$ as an extra column at the end of $A$.
+    $$B = (A \parallel As' + e) \in \mathbb{Z}_q^{\ell \times (n+1)}$$, where $||$ means that we add $As'+e$ as an extra column at the end of $A$.
   - Let $G \in \mathbb{Z}_q^{\ell \times (n+1)}$ be a fixed public gadget matrix.
   - Output:
     $$C = B + \mu \cdot G$$
@@ -53,18 +52,11 @@ $\ell = (n+1)\log q$.
   - Output "0" if the magnitude of each entry of $v$ is small (i.e., less than $q/4$). Otherwise, output "1".
 
   - We have:
-$$
-
-C \cdot s = ((A \parallel As' + e) + \mu G)
-\begin{pmatrix}
--s' \\
-1
-\end{pmatrix}
-= -As' + As' + e + \mu Gs
-= e + \mu Gs 
-$$
-which is of small magnitude if s = 0.
-$e + \mu Gs$ is called the decryption invariant.
+  $$C \cdot s = ((A \parallel As' + e) + \mu G)(-s'\;1)
+  = -As' + As' + e + \mu Gs
+  = e + \mu Gs$$
+  which is of small magnitude if s = 0.
+  $e + \mu Gs$ is called the decryption invariant.
 
 ## What I still need to do
 
