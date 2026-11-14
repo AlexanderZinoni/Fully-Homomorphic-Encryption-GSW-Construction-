@@ -16,12 +16,13 @@ $\ell = (n+1)\log q$.
 - **Enc** $(s \in \mathbb{Z}_q^{n+1},\ \mu \in \mathbb{Z}_2) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
 
   - Sample a random matrix $A$ from  $\mathbb{Z}_q^{\ell \times n}$.
-  - Sample an error vector $e$ in $\chi^\ell$, where $\chi$ is the error distribution. In this implementation, I rely on the Central Limit Theorem to implement this.
+  - Sample an error vector $e$ in $\chi^\ell$, where $\chi$ is the error distribution. In this implementation, I rely on the Central Limit Theorem to mimic a Gaussian distribution.
   - Build:
     $$B = (A \parallel As' + e) \in \mathbb{Z}_q^{\ell \times (n+1)}$$, where $||$ means that we add $As'+e$ as an extra column at the end of $A$.
   - Let $G \in \mathbb{Z}_q^{\ell \times (n+1)}$ be a fixed public gadget matrix.
   - Output:
     $$C = B + \mu \cdot G$$
+  - (Not in the original algorithm) Before outputing the result, I check wether $C$ is correct by computing the decryption invariant $e + \mu Gs$, and checking $C \cdot s = e + \mu Gs$.
 
 - **Dec** $(s,C) \rightarrow \mu$
 
@@ -29,12 +30,14 @@ $\ell = (n+1)\log q$.
     $$v = C \cdot s = (B+\mu G)s = Bs + \mu Gs$$
   - Output "0" if the magnitude of each entry of $v$ is small (i.e., less than $q/4$). Otherwise, output "1".
 
-  - We have:
+
+The algorithm is correct since :
+
   $$C \cdot s = ((A \parallel As' + e) + \mu G)(-s'\;1)
   = -As' + As' + e + \mu Gs
   = e + \mu Gs$$
-  which is of small magnitude if s = 0.
-  $e + \mu Gs$ is called the decryption invariant.
+
+So $C \cdot s$ is of small magnitude if $\mu$ is 0.
 
 ## What I still need to do
 
