@@ -10,7 +10,7 @@ The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.
 - **Key Gen** $(1^n) \rightarrow s \in \mathbb{Z}_q^{n+1}$
 
   - Sample a random vector $s'$ from $\mathbb{Z}_q^n$.
-  - Return the vector $s$ with $n+1$ corrdinates by adding a 1 as last coordinate to $s'$. 
+  - Return the vector $s$ with $n+1$ corrdinates by adding a 1 as last coordinate to $-s'$. 
 
 - **Enc** $(s \in \mathbb{Z}_q^{n+1},\ \mu \in \mathbb{Z}_2) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
 
