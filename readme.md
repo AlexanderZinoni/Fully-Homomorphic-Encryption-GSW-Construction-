@@ -12,7 +12,7 @@ The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.
   - Sample a random vector $s'$ from $\mathbb{Z}_q^n$.
   - Return the vector $s$ with $n+1$ corrdinates by adding a 1 as last coordinate to $-s'$. 
 
-- **Enc** $(s \in \mathbb{Z}_q^{n+1},\ \mu \in \mathbb{Z}_2) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
+- **Enc** $(s,\ \mu \in \{0,1\}) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
 
   - Sample a random matrix $A$ from  $\mathbb{Z}_q^{\ell \times n}$.
   - Sample an error vector $e$ in $\chi^\ell$, where $\chi$ is the error distribution. In this implementation, I rely on the Central Limit Theorem to mimic a Gaussian distribution.
