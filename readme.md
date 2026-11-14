@@ -23,34 +23,7 @@ To remove the generated executable and object files:
 
     make clean
 
-## Output Example
-
-There currently are 3 functions:
-
-- `KeyGen`: Takes a security parameter an integer `n` and returns a randomly sampled vector `s`.
-
-- `Enc`: Takes a secret key `s` and a bit `b` and returns the ciphertext: a matrix `C`.  
-
-- `Dec`: Takes a secret key `s` and a ciphtertext `C` and recovers the encrrypted bit `b`.
-
-I have also added a `check_correctness` function which I use in `Enc`. It verifies that the decryption invariant holds before returning a ciphertext to make sure it is correct.
-
-      Input Matrix: 
-      [[1,-1,3]
-      [1,0,5]
-      [1,2,6]]
-
-      LLL reduced matrix:
-      [[0,1,-1]
-      [1,0,0]
-      [0,1,2]]
-
-      Reduction Successful!
-
-
-In the case where the reduction is unsuccessful, the program specifies whether the basis is not size-reduced or the Lovasz condition does not hold.
-
-## Decription of the algorithm
+## Description of the algorithm as in [[1]](#1)
 
 
 The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$ and
@@ -63,10 +36,35 @@ $\ell = (n+1)\log q$.
   - Output:
     $$s = \begin{pmatrix} -s' \\ 1 \end{pmatrix} \in \mathbb{Z}_q^{n+1}$$
 
+- **Enc** $(s \in \mathbb{Z}_q^{n+1},\ \mu \in \mathbb{Z}_2) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
 
+  - Sample a random matrix $A \xleftarrow{R} \mathbb{Z}_q^{\ell \times n}$.
+  - Sample an error vector $e \xleftarrow{R} \chi^\ell$.
+  - Build:
+    $$B = (A \parallel As' + e) \in \mathbb{Z}_q^{\ell \times (n+1)}$$, where || means that we add $As'+e$ as an extra column at the end of $A$.
+  - Let $G \in \mathbb{Z}_q^{\ell \times (n+1)}$ be a fixed public gadget matrix.
+  - Output:
+    $$C = B + \mu \cdot G$$
 
+- **Dec** $(s,C) \rightarrow \mu$
 
+  - Compute the vector:
+    $$v = C \cdot s = (B+\mu G)s = Bs + \mu Gs$$
+  - Output "0" if the magnitude of each entry of $v$ is small (i.e., less than $q/4$). Otherwise, output "1".
 
+  - We have:
+$$
+
+C \cdot s = ((A \parallel As' + e) + \mu G)
+\begin{pmatrix}
+-s' \\
+1
+\end{pmatrix}
+= -As' + As' + e + \mu Gs
+= e + \mu Gs 
+$$
+which is of small magnitude if s = 0.
+$e + \mu Gs$ is called the decryption invariant.
 
 ## What I still need to do
 
