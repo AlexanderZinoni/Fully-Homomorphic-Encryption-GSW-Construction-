@@ -4,7 +4,7 @@ This is a basic and not secure implementation of GSW as described in the lecture
 
 ## Description of the algorithm 
 
-The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.In this case, the message $m$ is a single bit $\mu$, $n$ is an integer called the security parameter, $q$ is the modulus, and $\chi$ is a probility distribution. We also note  $\ell = (n+1)\log q$.
+The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.In this case, the message $m$ is a single bit $\mu$, $n$ is an integer called the security parameter, $q$ is the modulus, and $\chi$ is a probility distribution (in my implementation: a gaussian with standard deviation $\sigma$). We also note  $\ell = (n+1)\log q$.
 
 
 - **Key Gen** $(1^n) \rightarrow s \in \mathbb{Z}_q^{n+1}$
@@ -15,7 +15,7 @@ The security of GSW relies on the LWE assumption with parameters $(m,n,q,\chi)$.
 - **Enc** $(s,\ \mu \in \{0,1\}) \rightarrow C \in \mathbb{Z}_q^{\ell \times (n+1)}$
 
   - Sample a random matrix $A$ from  $\mathbb{Z}_q^{\ell \times n}$.
-  - Sample an error vector $e$ in $\chi^\ell$, where $\chi$ is the error distribution. In this implementation, I rely on the Central Limit Theorem to mimic a Gaussian distribution.
+  - Sample an error vector $e$ in $\chi^\ell$, where $\chi$ is the error distribution. In this implementation, I rely on the Central Limit Theorem to mimic a Gaussian distribution of standard deviation $\sigma$.
   - Build:
     $$B = (A \parallel As' + e) \in \mathbb{Z}_q^{\ell \times (n+1)}$$, where $||$ means that we add $As'+e$ as an extra column at the end of $A$.
   - Let $G \in \mathbb{Z}_q^{\ell \times (n+1)}$ be a fixed public gadget matrix.
@@ -38,12 +38,16 @@ The algorithm is correct since :
 
 So $C \cdot s$ is of small magnitude if $\mu$ is 0.
 
-## What I still need to do
+## What I still need to do:
 
-- [x] Add Homomorphic sum.
 - [ ] Add Homomorphic product.
 - [ ] Use something more cryptographically secure than `rand()`.
-- [ ] Ecnrypting 0 takes 0.15s while encrypting 1 takes 0.21s on average which is an obvious security flaw (with the parameters: n = 640, q = 2^15, l = 9615, error = 2.3). 
+
+## Fixes and progress: 
+- [x] Add Homomorphic sum.
+- [x] Encrypting `0` takes `0.15s` while encrypting `1` takes `0.21s` on average which is an obvious security flaw (with the parameters: n = 640, q = 2^15, l = 9615, error = 2.3). The problem was that I was not summing the gadget matrix if $\mu = 0$, I now do it in both cases and add $\mu \cdot G$ to $B$. Encryption now takes about `0.25s` in both cases.
+- [x] No more memory leaks, checked with valgrind.
+
 
 ## Project Structure
     .
@@ -60,7 +64,7 @@ Compile the project using `make`:
 
 and execute it with :
 
-    ./main matrix.txt
+    ./main
 
 To remove the generated executable and object files:
 

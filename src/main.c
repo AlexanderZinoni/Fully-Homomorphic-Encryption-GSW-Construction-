@@ -14,8 +14,8 @@ int main(){
 
 	uint *key = key_gen(n,q);
 
-	char b = 0;
-	char b2 =0;
+	char b = 1;
+	char b2 = 0;
 
 	printf("Encrypting: %i -> C1\n", b);
 	clock_t start_c1 = clock();
@@ -31,11 +31,11 @@ int main(){
 	//print_mat(C,l,n+1);
 
 	clock_t start_sum = clock();
-	C = hom_sum(n,q,C,C2);
+	uint *C_sum = hom_sum(n,q,C,C2);
 	clock_t end_sum = clock();
 
 	clock_t start_dec = clock();
-	char b_2 = dec_bit(n, q, C, key);
+	char b_2 = dec_bit(n, q, C_sum, key);
 	clock_t end_dec = clock();
 	printf("Decryption of C1 XOR C2: %i \n", b_2);
 
@@ -45,4 +45,9 @@ int main(){
 	printf("Encryption of C2 : %fs\n", (float)(end_c2 - start_c2) / CLOCKS_PER_SEC);
 	printf("C1 + C2 : %fs\n", (float)(end_sum - start_sum) / CLOCKS_PER_SEC);
 	printf("Decryption of C1+C2 : %fs\n", (float)(end_dec - start_dec) / CLOCKS_PER_SEC);
+
+	free(key);
+	free(C);
+	free(C2);
+	free(C_sum);
 }

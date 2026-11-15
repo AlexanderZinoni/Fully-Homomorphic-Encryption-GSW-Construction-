@@ -28,15 +28,14 @@ char check_correctness(uint *A, uint *key, uint *e, size_t n, size_t l, size_t q
 
 	uint *s = s_from_key(key, n);
 	uint *test = mat_vec_prod(A, s, n+1, l, q);
+	free(s);
 
 	if (compare_vec(test, e, l)){
 		free(test);
-		free(s);
 		return 1;
 	}
 
 	free(test);
-	free(s);
 	return 0;
 
 }
@@ -48,28 +47,38 @@ uint *enc_bit(size_t n, size_t q, uint *key, char mu, double sigma){
 	uint *A = new_rand_mat(l, n, q);
 	uint *e = new_error_vec(l,q,sigma);
 
-	uint *v = mat_vec_prod(A, scalar_by_vec(key,-1,n,q), n, l, q);
-	v = vec_sum(e,v,l,q);
+	uint *s_neg = scalar_by_vec(key,-1,n,q);
 
-	A = append_vec(A, v, n, l);
+	uint *A_key = mat_vec_prod(A, s_neg, n, l, q);
+	uint *v = vec_sum(e,A_key,l,q);
+	free(s_neg);
+	free(A_key);
 
-	if (!mu){
-		//printf("not mu\n");
-		if (!check_correctness(A,key,e,n,l,q))
-			printf("RESULT INCORECT\n");
-		free(v);
-		free(e);
-		return A;
-	}
+	uint *B = append_vec(A, v, n, l);
+	free(A);
+	free(v);
 
 	uint *G = get_gadget_mat(n,l,q);
-	A = mat_sum(A, G, n+1, l, q);
-	e = vec_sum(e, mat_vec_prod(G, s_from_key(key,n), n+1, l, q), l, q);
-	if (!check_correctness(A,key,e,n,l,q))
-		printf("RESULT INCORECT\n");
-	free(v);
+	uint *G_mu = scalar_by_vec(G, mu, l*(n+1), q);
+	free(G);
+
+	uint *C = mat_sum(B, G_mu, n+1, l, q);
+	free(B);
+
+	// Checking the correctness of C by computing the decryption invariant.
+	uint *s = s_from_key(key,n);
+	uint *G_mu_s = mat_vec_prod(G_mu, s, n+1, l, q);
+	uint *dec_inv = vec_sum(e, G_mu_s, l, q);
+	free(s);
+	free(G_mu_s);
 	free(e);
-	return A;
+	free(G_mu);
+
+	if (!check_correctness(C,key,dec_inv,n,l,q))
+		printf("RESULT INCORECT\n");
+	free(dec_inv);
+
+	return C;
 }
 
 
@@ -78,29 +87,14 @@ char dec_bit(size_t n, size_t q, uint *C, uint *key){
 	uint *s = s_from_key(key, n);
 
 	uint *Cs = mat_vec_prod(C, s, n+1, l, q);
-	//print_vec(Cs,l);
+	free(s);
 
-	// v[l-1] ≈ (m mod 2)·q/2 + e  (mod q), with |e| small
 	uint top = Cs[l-1];
+	free(Cs);
+
 	char bit = (top > q/4) && (top < q - q/4);
 
-	free(Cs);
-	free(key);
 	return bit;
-
-	/*
-	uint max_magnitude = q>>2; // or q/4
-
-	for (size_t i=0; i<l; i++){
-		printf("%i > %i AND %i < %li\n",Cs[i],max_magnitude, Cs[i], q-max_magnitude);
-
-		if ( (Cs[i]>max_magnitude) && (Cs[i]<q-max_magnitude) ){
-			return 1;
-		}
-	}
-
-	return 0;
-	*/
 }
 
 
