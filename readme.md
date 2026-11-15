@@ -45,7 +45,7 @@ So $C \cdot s$ is of small magnitude if $\mu$ is 0.
 
 ## Fixes and progress: 
 - [x] Add Homomorphic sum.
-- [x] Encrypting `0` takes `0.15s` while encrypting `1` takes `0.21s` on average which is an obvious security flaw (with the parameters: n = 640, q = 2^15, $\sigma$ = 2.3). The problem was that I was not summing the gadget matrix if $\mu = 0$, I now do it in both cases and add $\mu \cdot G$ to $B$. Encryption now takes about `0.25s` in both cases.
+- [x] Encrypting `0` takes `0.15s` while encrypting `1` takes `0.21s` on average which is an obvious security flaw (with the parameters: $n = 640, q = 2^15, \sigma = 2.3$). The problem was that I was not summing the gadget matrix if $\mu = 0$, I now do it in both cases and add $\mu \cdot G$ to $B$. Encryption now takes about `0.25s` in both cases.
 - [x] No more memory leaks, checked with valgrind.
 
 
