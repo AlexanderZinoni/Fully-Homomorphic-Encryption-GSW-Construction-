@@ -42,11 +42,11 @@ char check_correctness(uint *A, uint *key, uint *e, size_t n, size_t l, size_t q
 }
 
 
-uint *enc_bit(size_t n, size_t q, uint *key, char mu){
+uint *enc_bit(size_t n, size_t q, uint *key, char mu, double sigma){
 	size_t l = (n+1) * ceil_log2(q);
 
 	uint *A = new_rand_mat(l, n, q);
-	uint *e = new_error_vec(l,q,1);
+	uint *e = new_error_vec(l,q,sigma);
 
 	uint *v = mat_vec_prod(A, scalar_by_vec(key,-1,n,q), n, l, q);
 	v = vec_sum(e,v,l,q);
@@ -75,15 +75,24 @@ uint *enc_bit(size_t n, size_t q, uint *key, char mu){
 
 char dec_bit(size_t n, size_t q, uint *C, uint *key){
 	size_t l = (n+1) * ceil_log2(q);
-	key = s_from_key(key, n);
+	uint *s = s_from_key(key, n);
 
-	uint *Cs = mat_vec_prod(C, key, n+1, l, q);
+	uint *Cs = mat_vec_prod(C, s, n+1, l, q);
 	//print_vec(Cs,l);
 
+	// v[l-1] ≈ (m mod 2)·q/2 + e  (mod q), with |e| small
+	uint top = Cs[l-1];
+	char bit = (top > q/4) && (top < q - q/4);
+
+	free(Cs);
+	free(key);
+	return bit;
+
+	/*
 	uint max_magnitude = q>>2; // or q/4
 
 	for (size_t i=0; i<l; i++){
-		//printf("%i > %i AND %i < %li\n",Cs[i],max_magnitude, Cs[i], q-max_magnitude);
+		printf("%i > %i AND %i < %li\n",Cs[i],max_magnitude, Cs[i], q-max_magnitude);
 
 		if ( (Cs[i]>max_magnitude) && (Cs[i]<q-max_magnitude) ){
 			return 1;
@@ -91,4 +100,11 @@ char dec_bit(size_t n, size_t q, uint *C, uint *key){
 	}
 
 	return 0;
+	*/
+}
+
+
+uint *hom_sum(size_t n, size_t q, uint *C1, uint *C2){
+	size_t l = (n+1) * ceil_log2(q);
+	return vec_sum(C1, C2, (n+1)*l, q);
 }

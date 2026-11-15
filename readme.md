@@ -40,9 +40,10 @@ So $C \cdot s$ is of small magnitude if $\mu$ is 0.
 
 ## What I still need to do
 
-- [ ] Add Homomorphic oprations (sum and product).
-- [ ] Increase variable size (32bit -> 64bit).
+- [x] Add Homomorphic sum.
+- [ ] Add Homomorphic product.
 - [ ] Use something more cryptographically secure than `rand()`.
+- [ ] Ecnrypting 0 takes 0.15s while encrypting 1 takes 0.21s on average which is an obvious security flaw (with the parameters: n = 640, q = 2^15, l = 9615, error = 2.3). 
 
 ## Project Structure
     .
