@@ -93,6 +93,8 @@ void print_vec(uint *vec, size_t n){
 void print_mat(uint *mat, size_t n, size_t l){
 	printf("[");
 	for (size_t j = 0; j<n; j++){
+		if (j>0)
+			printf(" ");
 		printf("[");
 		for (size_t i = 0; i<l; i++){
 			printf("%i, ", mat[i*n + j]);
@@ -211,4 +213,16 @@ char compare_vec(uint *vec_a, uint *vec_b, size_t n){
 			return 0;
 	}
 	return 1;
+}
+
+
+uint *get_gadget_inv(size_t n, size_t l, size_t q){
+	uint *h = new_matrix(n+1, l);
+	size_t x;
+
+	for (size_t i=0; i<n+1; i++){
+		x = i+(ceil_log2(q))*i*(n+1);
+		h[x] = 1;
+	}
+	return h;
 }

@@ -3,6 +3,17 @@
 #include <time.h>
 
 int main(){
+	size_t n = 3; 
+	size_t q = 1<<5;
+	size_t l = (n+1) * ceil_log2(q);
+
+	uint *h = get_gadget_inv(n,l,q);
+	print_mat(h, n+1, l);
+
+}
+
+
+int main2(){
 	// Initialise values
 	size_t n = 640; 
 	size_t q = 1<<15;

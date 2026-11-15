@@ -55,3 +55,6 @@ uint *get_gadget_mat(size_t n, size_t l, size_t q);
 
 
 char compare_vec(uint *vec_a, uint *vec_b, size_t n);
+
+
+uint *get_gadget_inv(size_t n, size_t l, size_t q);
